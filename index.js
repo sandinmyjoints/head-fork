@@ -53,17 +53,17 @@ function sync(path, len){
 
 function async(path, len, fn){
   len = len || 250;
-  
+
   fs.stat(path, function(err, stat){
     if (err) return fn(err);
     len = Math.min(stat.size, len);
 
     fs.open(path, 'r', function(err, fd){
       if (err) return fn(err);
-      
+
       var buf = new Buffer(len);
       fs.read(fd, buf, 0, len, 0, function(err, read){
-        fs.close(fd);
+        fs.close(fd, () => {});
         fn(err, buf, read);
       });
     });
